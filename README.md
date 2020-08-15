@@ -3,18 +3,28 @@ AR Breakout Rooms for Hack'20 Hackathon
 
 
 API Spec:
-- Initialization
-{ name: 
-- Updating position
+- Initialization: server to client
+  action: register
+{
+	id: ...
+}
+- Spawning positions: server to client
+  action: spawn,
+{
+	x: ...,
+	y: ...,
+	z: ...
+}
+- Updating position: client to server
+  action: updatePosition,
 {
 	id: ...,
-	action: updatePosition,
 	relativeX: ... (float),
 	relativeY: ... (float),
 	relatizeZ: ... (float)
 }
-
-- Response json array
+- Response json array (on the updatePosition)
+  action: updatePosition
 [
 	{id: ....,
 	name: ...,
