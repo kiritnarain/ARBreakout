@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
     socket.emit('register', {id: user.id});
 
     socket.on('sync', (e) => {
-        console.log("username is " + e.name + " with position " + e.position);
+        // console.log("username is " + e.name + " with position " + e.position);
         user.username = e.name;
         user.relPosition = e.position;
     })
