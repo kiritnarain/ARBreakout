@@ -11,15 +11,10 @@ API Spec:
 - Initialization: client to server
 {
 	action: "sync",
-	name: "[player_name]"
-}
-- Spawning positions: server to client
-  ,
-{
-	action: "spawn"
-	x: ...,
-	y: ...,
-	z: ...
+	name: "[player_name]",
+	relativeX: ... (float),
+	relativeY: ... (float),
+	relativeZ: ... (float)
 }
 
 - Updating position: client to server
