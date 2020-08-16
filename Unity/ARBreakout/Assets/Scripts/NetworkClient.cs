@@ -1,27 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SocketIO;
 
-public class NetworkClient : MonoBehaviour //: SocketIOComponent
+public class NetworkClient : SocketIOComponent
 {
     public GameObject PlayerModel;
+    public GameObject Origin;
+    public GameObject Player;
     private Dictionary<string, GameObject> playerObjects;
     private string id = null;
      
     // Start is called before the first frame update
-    /*public override void Start()
+    public override void Start()
     {
         base.Start();
+        setupEvents();
     }
 
     // Update is called once per frame
     public override void Update()
     {
         base.Update();
+        
     }
 
     private void setupEvents()
     {
+        Debug.Log("Setting up events");
         On("open", (E) =>
         {
             Debug.Log("Connection made");
@@ -34,11 +40,16 @@ public class NetworkClient : MonoBehaviour //: SocketIOComponent
             this.id = id;
             JSONObject syncObj = new JSONObject(JSONObject.Type.OBJECT);
             syncObj.AddField("name", "Player One");
+            Vector3 relPos = Player.transform.position - Origin.transform.position;
+            syncObj.AddField("relativeX", relPos.x);
+            syncObj.AddField("relativeY", relPos.y);
+            syncObj.AddField("relativeZ", relPos.z);
             Emit("sync", syncObj);
         });
 
-        On("updatePosition", (E) => {
+        On("syncPosition", (E) => {
             List<JSONObject> positionsList = E.data.list;
+            Debug.Log("Syncing positions of " + positionsList.Count + " players");
             updatePlayerPositions(positionsList);
 
         });
@@ -77,5 +88,5 @@ public class NetworkClient : MonoBehaviour //: SocketIOComponent
     public string getID()
     {
         return this.id;
-    }*/
+    }
 }
