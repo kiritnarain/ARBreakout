@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
     socket.on('sync', (e) => {
         // console.log("username is " + e.name + " with position " + e.position);
         user.username = e.name;
-        user.relPosition = new Vector3(e.position.x, e.position.y, e.position.z);
+        user.relPosition = new Vector3(e.relativeX, e.relativeY, e.relativeZ);
         // Find the spawnpoints that is empty and emit the location to the user
         for (let i = 0; i < spawnpoints.length; i++) {
             // If the spawnpoints is not occupied then spawn

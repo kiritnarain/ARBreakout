@@ -181,6 +181,7 @@ namespace SocketIO
 
 		public void Close()
 		{
+			Debug.Log("SocketIOComponent: Close called");
 			EmitClose();
 			connected = false;
 		}
@@ -384,6 +385,7 @@ namespace SocketIO
 
 		private void OnClose(object sender, CloseEventArgs e)
 		{
+			Debug.Log("SocketIO: OnClose called");
 			EmitEvent("close");
 		}
 
