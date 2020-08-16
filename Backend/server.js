@@ -93,20 +93,12 @@ handleUpdatePosition = (user, pos) => {
             let difference = user.position.substract(users[userID].position);
 
             let found = false;
-<<<<<<< HEAD
             for (i in relPosListOther) {
                 let otherPos = relPosListOther[i];
                 if (otherPos.id === user.id) {
                     otherPos.x = difference.x;
                     otherPos.y = difference.y;
                     otherPos.z = difference.z;
-=======
-            for (let otherPos in relPosListOther) {
-                if (relPosListOther[otherPos].id === user.id) {
-                    relPosListOther[otherPos].x = difference.x;
-                    relPosListOther[otherPos].y = difference.y;
-                    relPosListOther[otherPos].z = difference.z;
->>>>>>> 3aca2c29e104aa95082451ed51759f26eab8cb46
                     found = true;
                 }
             }
