@@ -28,8 +28,8 @@ io.on('connection', (socket) => {
         console.log('User spawned');
 
         user.username = e.name;
-        user.relPosition = new Vector3(parseInt(e.relativeX), parseInt(e.relativeY), parseInt(e.relativeZ));
-        user.rotationOrientation = new Vector3(parseInt(e.rotationX), parseInt(e.rotationY), parseInt(e.rotationZ))
+        user.relPosition = new Vector3(parseFloat(e.relativeX), parseFloat(e.relativeY), parseFloat(e.relativeZ));
+        user.rotationOrientation = new Vector3(parseFloat(e.rotationX), parseFloat(e.rotationY), parseFloat(e.rotationZ))
 
         // Find the spawnpoints that is empty and emit the location to the user
         for (let i = 0; i < spawnpoints.length; i++) {
@@ -83,8 +83,8 @@ io.on('connection', (socket) => {
 // user : the user that position changes
 // pos : the position it changes to
 handleUpdatePosition = (user, pos) => {
-    let newPosition = new Vector3(parseInt(pos.relativeX), parseInt(pos.relativeY), parseInt(pos.relativeZ));
-    let newRotation = new Vector3(parseInt(pos.rotationX), parseInt(pos.rotationY), parseInt(pos.rotationZ));
+    let newPosition = new Vector3(parseFloat(pos.relativeX), parseFloat(pos.relativeY), parseFloat(pos.relativeZ));
+    let newRotation = new Vector3(parseFloat(pos.rotationX), parseFloat(pos.rotationY), parseFloat(pos.rotationZ));
 
     // Change both of the position accordingly
     user.relPosition = newPosition;
