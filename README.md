@@ -14,7 +14,10 @@ API Spec:
 	name: "[player_name]",
 	relativeX: ... (float),
 	relativeY: ... (float),
-	relativeZ: ... (float)
+	relativeZ: ... (float),
+	rotationX: ... (float),
+	rotationY: ... (float),
+	rotationZ: ... (float)
 }
 
 - Updating position: client to server
@@ -24,7 +27,10 @@ API Spec:
 	id: ...,
 	relativeX: ... (float),
 	relativeY: ... (float),
-	relatizeZ: ... (float)
+	relatizeZ: ... (float),
+	rotationX: ... (float),
+	rotationY: ... (float),
+	rotationZ: ... (float)
 }
 - Response json array (on the updatePosition)
 [
@@ -32,7 +38,10 @@ API Spec:
 	name: ...,
 	relativeX: ...,
 	relativeY: ...,
-	relativeZ: ...}
+	relativeZ: ...,
+	deltaRotationX: ...,
+	deltaRotationY: ...,
+	deltaRotationZ: ...}
 	
 	, ...
 	
