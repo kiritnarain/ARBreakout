@@ -20,6 +20,8 @@ io.on('connection', (socket) => {
 
     // Emit userID to the client for initialization
     socket.emit('register', {id: user.id});
+    
+    let interval;
 
     // get user information from the client to
     socket.on('sync', (e) => {
@@ -44,7 +46,7 @@ io.on('connection', (socket) => {
         }
 
         // Send position list to users every 50 seconds
-        var interval = setInterval(() => {
+        interval = setInterval(() => {
             if (user.othersRelativePos !== undefined) {
                 console.log('syncing position');
                 socket.emit('syncPosition', {users: user.othersRelativePos});
@@ -69,7 +71,10 @@ io.on('connection', (socket) => {
         }
         delete users[user.id];
         delete sockets[user.id];
-        clearInterval(interval);
+        if(interval!==undefined && interval!=null){
+            clearInterval(interval);
+        }
+        
     })
 });
 
