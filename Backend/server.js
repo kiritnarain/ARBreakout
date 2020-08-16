@@ -90,7 +90,7 @@ handleUpdatePosition = (user, pos) => {
     user.relPosition = newPosition;
 
     // Find the rotation difference of the user
-    let deltaRot = newRotation.substract(users[userID].rotationOrientation);
+    let deltaRot = newRotation.substract(user.rotationOrientation);
 
     // Update the user rotation
     user.rotationOrientation = newRotation;
