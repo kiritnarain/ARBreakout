@@ -113,6 +113,7 @@ handleUpdatePosition = (user, pos) => {
 
 
             // Check whether the id exists or not
+            // if the id exists in the list then update everything
             let found = false;
             for (i in relPosListOther) {
                 let otherPos = relPosListOther[i];
@@ -127,6 +128,7 @@ handleUpdatePosition = (user, pos) => {
                 }
             }
 
+            // if not found then push a new object to the list
             if (!found) {
                 relPosListOther.push(
                 {
@@ -151,6 +153,7 @@ handleUpdatePosition = (user, pos) => {
 generateSpawnPoints = (n) => {
     let div = 1;
     for (let i = 0; i < n; i++) {
+        // Make endpoints as uniformly distributed as possible
         spawnpoints.push({x: 1 - div, y: 0, z: -1 * div, occupied : false});
         spawnpoints.push({x: - 1 + div, y: 0, z: div, occupied : false});
         spawnpoints.push({x: div, y: 0, z: 1 - div, occupied : false});
