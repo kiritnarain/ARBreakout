@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
         // Send position list to users every 50 seconds
         interval = setInterval(() => {
             if (user.othersRelativePos !== undefined) {
-                console.log('syncing position');
+                console.log('syncing position: '+user.othersRelativePos);
                 socket.emit('syncPosition', {users: user.othersRelativePos});
             }
         }, 50);
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
         if(interval!==undefined && interval!=null){
             clearInterval(interval);
         }
-        
+
     })
 });
 
