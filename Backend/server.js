@@ -97,7 +97,7 @@ handleUpdatePosition = (user, pos) => {
             // Handle relative position difference
             let relPosListOther = users[userID].othersRelativePos;
             if (relPosListOther === undefined) {
-                return;
+                relPosListOther = [];
             }
 
             let difference = user.position.substract(users[userID].position);
@@ -106,20 +106,22 @@ handleUpdatePosition = (user, pos) => {
             for (i in relPosListOther) {
                 let otherPos = relPosListOther[i];
                 if (otherPos.id === user.id) {
-                    otherPos.x = difference.x;
-                    otherPos.y = difference.y;
-                    otherPos.z = difference.z;
+                    otherPos.relativeX = difference.x;
+                    otherPos.relativeY = difference.y;
+                    otherPos.relativeZ = difference.z;
                     found = true;
                 }
             }
 
             if (!found) {
-                relPosListOther.push({id: user.id, name: user.name, x: difference.x, y: difference.y, z:difference.z})
+                relPosListOther.push({id: user.id, name: user.name, relativeX: difference.x, relativeY: difference.y, relativeZ: difference.z})
             }
 
             users[userID].othersRelativePos = relPosListOther;
+
         }
     }
+
 };
 
 // Generate 4n spawnpoints

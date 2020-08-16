@@ -10,10 +10,12 @@ public class NetworkClient : SocketIOComponent
     public GameObject Player;
     private Dictionary<string, GameObject> playerObjects;
     private string id = null;
+    private static float updateTime = 5f; //Seconds to send server corrected position.
      
     // Start is called before the first frame update
     public override void Start()
     {
+        playerObjects = new Dictionary<string, GameObject>();
         base.Start();
         setupEvents();
         StartCoroutine("UpdatePos");
@@ -38,7 +40,7 @@ public class NetworkClient : SocketIOComponent
             updateObj.AddField("relativeY", relPos.y);
             updateObj.AddField("relativeZ", relPos.z);
             Emit("updatePosition", updateObj);
-            yield return new WaitForSeconds(5f); //1/10 second interval updates
+            yield return new WaitForSeconds(updateTime);
         }
     }
 
@@ -65,7 +67,7 @@ public class NetworkClient : SocketIOComponent
         });
 
         On("syncPosition", (E) => {
-            List<JSONObject> positionsList = E.data.list;
+            List<JSONObject> positionsList = E.data["users"].list;
             Debug.Log("Syncing positions of " + positionsList.Count + " players");
             updatePlayerPositions(positionsList);
 
@@ -76,19 +78,40 @@ public class NetworkClient : SocketIOComponent
     {
         foreach(JSONObject obj in positionsList)
         {
-            string id = cleanJSONStr(obj["id"].ToString());
-            if(id == getID())
-            {
-                continue;
-            }
-            if (playerObjects.ContainsKey(id))
+            string pid = cleanJSONStr(obj["id"].ToString());
+            Debug.Log("Updating player position with id: " + pid);
+            if (playerObjects.ContainsKey(pid) ==true)
             {
                 //Update position
+                GameObject playerHead;
+                playerObjects.TryGetValue(pid, out playerHead);
+                if (playerHead != null)
+                {
+                    
+                    playerHead.transform.position = new Vector3(obj["relativeX"].n, obj["relativeY"].n, obj["relativeZ"].n);
+                    Debug.Log("Updating currently existing player position to " + playerHead.transform.position);
+                }
+                else
+                {
+                    Debug.Log("Error: Updating Player pos, tryGet failed");
+                }
+                
             }
             else
             {
                 //Set new Player
+                Debug.Log("Instantiating new player: "+ pid+";");
                 GameObject nplayer = Instantiate(PlayerModel);
+                float x = obj["relativeX"].n;
+                Debug.Log("Player X: " + x);
+                float y = obj["relativeY"].n;
+                Debug.Log("Player Y: " + y);
+                float z = obj["relativeZ"].n;
+                nplayer.transform.position = new Vector3(x, y, z);
+                //Debug.Log("Position: "+nplayer.transform.position);
+                playerObjects.Add(pid, nplayer);
+                Debug.Log("Added player to dictionary");
+                Debug.Log("Test added: " + playerObjects.ContainsKey(pid));
             }
         }
     }
