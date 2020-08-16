@@ -184,7 +184,7 @@ public class Voice : MonoBehaviour
         mRtcEngine.JoinChannel(channelName, "extra", 0);
     }
 
-    /*
+    
     public void LeaveChannel()
     {
         // int duration = mRtcEngine.GetAudioMixingDuration ();
@@ -194,8 +194,6 @@ public class Voice : MonoBehaviour
         // effect.StopAllEffects ();
 
         mRtcEngine.LeaveChannel();
-        string channelName = mChannelNameInputField.text.Trim();
-        Debug.Log(string.Format("left channel name {0}", channelName));
     }
     
 
@@ -207,7 +205,7 @@ public class Voice : MonoBehaviour
         }
     }
 
-    */
+   
     public string getSdkVersion()
     {
         string ver = IRtcEngine.GetSdkVersion();
