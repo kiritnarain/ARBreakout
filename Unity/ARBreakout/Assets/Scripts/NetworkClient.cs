@@ -9,6 +9,7 @@ public class NetworkClient : SocketIOComponent
     public GameObject Origin;
     public GameObject Player;
     private Dictionary<string, GameObject> playerObjects;
+    private Dictionary<string, Vector3> originalHeadRotations;
     private string id = null;
     private static float updateTime = 5f; //Seconds to send server corrected position.
      
@@ -16,6 +17,7 @@ public class NetworkClient : SocketIOComponent
     public override void Start()
     {
         playerObjects = new Dictionary<string, GameObject>();
+        originalHeadRotations = new Dictionary<string, Vector3>();
         base.Start();
         setupEvents();
         StartCoroutine("UpdatePos");
@@ -63,6 +65,9 @@ public class NetworkClient : SocketIOComponent
             syncObj.AddField("relativeX", relPos.x);
             syncObj.AddField("relativeY", relPos.y);
             syncObj.AddField("relativeZ", relPos.z);
+            syncObj.AddField("rotationX", Player.transform.eulerAngles.x);
+            syncObj.AddField("rotationY", Player.transform.eulerAngles.x);
+            syncObj.AddField("rotationZ", Player.transform.eulerAngles.x);
             Emit("sync", syncObj);
         });
 
@@ -90,6 +95,19 @@ public class NetworkClient : SocketIOComponent
                     
                     playerHead.transform.position = new Vector3(obj["relativeX"].n, obj["relativeY"].n, obj["relativeZ"].n);
                     Debug.Log("Updating currently existing player position to " + playerHead.transform.position);
+                    if (originalHeadRotations.ContainsKey(pid))
+                    {
+                        Vector3 originalRotations;
+                        originalHeadRotations.TryGetValue(pid, out originalRotations);
+                        playerHead.transform.eulerAngles = new Vector3(originalRotations.x + obj["rotationX"].n, originalRotations.y + obj["rotationY"].n, originalRotations.z + obj["rotationZ"].n);
+                    }
+                    else
+                    {
+                        Debug.Log("Recalculating player orientation");
+                        playerHead.transform.LookAt(Player.transform.position);
+                        originalHeadRotations.Add(pid, playerHead.transform.eulerAngles);
+
+                    }
                 }
                 else
                 {
@@ -108,6 +126,8 @@ public class NetworkClient : SocketIOComponent
                 Debug.Log("Player Y: " + y);
                 float z = obj["relativeZ"].n;
                 nplayer.transform.position = new Vector3(x, y, z);
+                nplayer.transform.LookAt(Player.transform.position);
+                originalHeadRotations.Add(pid, nplayer.transform.eulerAngles);
                 //Debug.Log("Position: "+nplayer.transform.position);
                 playerObjects.Add(pid, nplayer);
                 Debug.Log("Added player to dictionary");
