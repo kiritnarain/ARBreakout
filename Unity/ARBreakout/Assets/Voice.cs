@@ -7,7 +7,7 @@ using UnityEngine.Android;
 #endif
 using agora_gaming_rtc;
 
-public class VoiceChannel : MonoBehaviour
+public class Voice : MonoBehaviour
 {
     public string mChannelNameInputField = "arworld";
 
