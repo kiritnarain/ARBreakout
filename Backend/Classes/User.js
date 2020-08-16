@@ -6,10 +6,11 @@ class User {
     constructor() {
         this.username = '';
         this.id = shortID.generate(); // Unique shortID
-        this.position = new Vector3(0, 0, 0);
-        this.relPosition = new Vector3(0, 0, 0);
-        this.spawnPointIndex = -1;
-        this.othersRelativePos = [];
+        this.position = new Vector3(); // Position stored in the server
+        this.relPosition = new Vector3(); // Position relative to the user origin
+        this.spawnPointIndex = -1;       // SpawnPoint index indicating which spawn points the user spawned in
+        this.othersRelativePos = [];            // Array of objects containing relative position to the obj
+        this.translationVector = new Vector3(); // Translation vector from relPosition to position
     }
     
 }
