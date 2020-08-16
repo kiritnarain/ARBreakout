@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
     })
     
     // Set to only update every 50 seconds
-    setInterval(function(){
+    setInterval(() => {
         if (user.relPosList !== undefined) {
             socket.emit('syncPosition', user.relPosList);
         }
