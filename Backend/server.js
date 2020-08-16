@@ -7,6 +7,8 @@ var sockets = []; // Mapping from userID to the Socket
 
 var spawnpoints = [];  // Array of possible spawn points
 
+console.log('Starting server');
+
 io.on('connection', (socket) => {
     console.log('listening');
 
@@ -21,9 +23,11 @@ io.on('connection', (socket) => {
 
     // get user information from the client to
     socket.on('sync', (e) => {
+        console.log('User spawned');
         // console.log("username is " + e.name + " with position " + e.position);
         user.username = e.name;
-        user.relPosition = new Vector3(e.relativeX, e.relativeY, e.relativeZ);
+        user.relPosition = new Vector3(parseInt(e.relativeX), parseInt(e.relativeY), parseInt(e.relativeZ));
+        //console.log(`Got relative position (${e.relativeX}, ${e.relativeY}, ${e.relativeZ})`);
         // Find the spawnpoints that is empty and emit the location to the user
         for (let i = 0; i < spawnpoints.length; i++) {
             // If the spawnpoints is not occupied then spawn
@@ -38,17 +42,18 @@ io.on('connection', (socket) => {
                 break;
             }
         }
-    })
+    });
 
     // Update the user position and updates the user relative position in all other users
     socket.on('updatePosition', (pos) => {
         console.log('updating position');
         handleUpdatePosition(user, pos);
-    })
+    });
     
     // Send position list to users every 50 seconds
     var interval = setInterval(() => {
         if (user.relPosList !== undefined) {
+            console.log('syncing position');
             socket.emit('syncPosition', user.relPosList);
         }
     }, 50);
@@ -70,7 +75,7 @@ io.on('connection', (socket) => {
 // user : the user that position changes
 // pos : the position it changes to
 handleUpdatePosition = (user, pos) => {
-    let newPosition = new Vector3(pos.relativeX, pos.relativeY, pos.relativeZ);
+    let newPosition = new Vector3(parseInt(pos.relativeX), parseInt(pos.relativeY), parseInt(pos.relativeZ));
 
     // Change both of the position accordingly
     user.relPosition = newPosition;
@@ -88,12 +93,20 @@ handleUpdatePosition = (user, pos) => {
             let difference = user.position.substract(users[userID].position);
 
             let found = false;
+<<<<<<< HEAD
             for (i in relPosListOther) {
                 let otherPos = relPosListOther[i];
                 if (otherPos.id === user.id) {
                     otherPos.x = difference.x;
                     otherPos.y = difference.y;
                     otherPos.z = difference.z;
+=======
+            for (let otherPos in relPosListOther) {
+                if (relPosListOther[otherPos].id === user.id) {
+                    relPosListOther[otherPos].x = difference.x;
+                    relPosListOther[otherPos].y = difference.y;
+                    relPosListOther[otherPos].z = difference.z;
+>>>>>>> 3aca2c29e104aa95082451ed51759f26eab8cb46
                     found = true;
                 }
             }
