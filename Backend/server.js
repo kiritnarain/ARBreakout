@@ -96,6 +96,9 @@ handleUpdatePosition = (user, pos) => {
             // if userID is not the users that change position
             // Handle relative position difference
             let relPosListOther = users[userID].othersRelativePos;
+            if (relPosListOther === undefined) {
+                return;
+            }
 
             let difference = user.position.substract(users[userID].position);
 
@@ -113,6 +116,8 @@ handleUpdatePosition = (user, pos) => {
             if (!found) {
                 relPosListOther.push({id: user.id, name: user.name, x: difference.x, y: difference.y, z:difference.z})
             }
+
+            users[userID].othersRelativePos = relPosListOther;
         }
     }
 };
