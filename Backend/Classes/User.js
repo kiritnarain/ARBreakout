@@ -11,6 +11,7 @@ class User {
         this.spawnPointIndex = -1;       // SpawnPoint index indicating which spawn points the user spawned in
         this.othersRelativePos = [];            // Array of objects containing relative position to the obj
         this.translationVector = new Vector3(); // Translation vector from relPosition to position
+        this.rotationOrientation = new Vector3(); // Rotation in x axis, y axis, and z axis respectively.
     }
     
 }

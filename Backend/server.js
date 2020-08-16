@@ -26,10 +26,11 @@ io.on('connection', (socket) => {
     // get user information from the client to
     socket.on('sync', (e) => {
         console.log('User spawned');
-        // console.log("username is " + e.name + " with position " + e.position);
+
         user.username = e.name;
         user.relPosition = new Vector3(parseInt(e.relativeX), parseInt(e.relativeY), parseInt(e.relativeZ));
-        //console.log(`Got relative position (${e.relativeX}, ${e.relativeY}, ${e.relativeZ})`);
+        user.rotationOrientation = new Vector3(parseInt(e.rotationX), parseInt(e.rotationY), parseInt(e.rotationZ))
+
         // Find the spawnpoints that is empty and emit the location to the user
         for (let i = 0; i < spawnpoints.length; i++) {
             // If the spawnpoints is not occupied then spawn
@@ -83,9 +84,16 @@ io.on('connection', (socket) => {
 // pos : the position it changes to
 handleUpdatePosition = (user, pos) => {
     let newPosition = new Vector3(parseInt(pos.relativeX), parseInt(pos.relativeY), parseInt(pos.relativeZ));
+    let newRotation = new Vector3(parseInt(pos.rotationX), parseInt(pos.rotationY), parseInt(pos.rotationZ));
 
     // Change both of the position accordingly
     user.relPosition = newPosition;
+
+    // Find the rotation difference of the user
+    let deltaRot = newRotation.substract(users[userID].rotationOrientation);
+
+    // Update the user rotation
+    user.rotationOrientation = newRotation;
 
     // Translate the change into the translation vector;
     user.position = user.relPosition.add(user.translationVector);
@@ -93,15 +101,18 @@ handleUpdatePosition = (user, pos) => {
     // loop over all other users in the server and calculate positional difference
     for (let userID in users) {
         if (userID !== user.id) {
-            // if userID is not the users that change position
+                        // if userID is not the users that change position
             // Handle relative position difference
             let relPosListOther = users[userID].othersRelativePos;
             if (relPosListOther === undefined) {
                 relPosListOther = [];
             }
 
+            // Find the difference in position
             let difference = user.position.substract(users[userID].position);
 
+
+            // Check whether the id exists or not
             let found = false;
             for (i in relPosListOther) {
                 let otherPos = relPosListOther[i];
@@ -109,16 +120,28 @@ handleUpdatePosition = (user, pos) => {
                     otherPos.relativeX = difference.x;
                     otherPos.relativeY = difference.y;
                     otherPos.relativeZ = difference.z;
+                    otherPos.deltaRotationX = deltaRot.x;
+                    otherPos.deltaRotationY = deltaRot.y;
+                    otherPos.deltaRotationZ = deltaRot.z;
                     found = true;
                 }
             }
 
             if (!found) {
-                relPosListOther.push({id: user.id, name: user.name, relativeX: difference.x, relativeY: difference.y, relativeZ: difference.z})
+                relPosListOther.push(
+                {
+                    id: user.id,
+                    name: user.name,
+                    relativeX: difference.x,
+                    relativeY: difference.y,
+                    relativeZ: difference.z,
+                    deltaRotationX: deltaRot.x,
+                    deltaRotationY: deltaRot.y,
+                    deltaRotationZ: deltaRot.z
+                })
             }
 
             users[userID].othersRelativePos = relPosListOther;
-
         }
     }
 
