@@ -13,53 +13,58 @@ io.on('connection', (socket) => {
 
     var user = new User();
 
-    // Put it into a mapping from id to the object and sockets
+    // Put a mapping from id to the object and sockets
     users[user.id] = user;
     sockets[user.id] = socket;
 
+    // Emit userID to the client for initialization
     socket.emit('register', {id: user.id});
 
+    // get user information from the client to
     socket.on('sync', (e) => {
         // console.log("username is " + e.name + " with position " + e.position);
         user.username = e.name;
         user.relPosition = new Vector3(e.position.x, e.position.y, e.position.z);
+        // Find the spawnpoints that is empty and emit the location to the user
+        for (let i = 0; i < spawnpoints.length; i++) {
+            // If the spawnpoints is not occupied then spawn
+            if (!spawnpoints[i].occupied) {
+                spawnpoints[i].occupied = true;
+
+                let spawn = spawnpoints[i];
+                user.spawnPointIndex = i;
+                user.position = new Vector3(spawn.x, spawn.y, spawn.z);
+                user.translationVector = user.position.substract(user.relPosition);
+                
+                break;
+            }
+        }
     })
     user.relPosition = new Vector3(1, 1, 1);
 
-    // Find the spawnpoints that is empty and emit the location to the user
-    for (let i = 0; i < spawnpoints.length; i++) {
-        // If the spawnpoints is not occupied then spawn
-        if (!spawnpoints[i].occupied) {
-            spawnpoints[i].occupied = true;
-
-            let spawn = spawnpoints[i];
-            user.spawnPointIndex = i;
-            user.position = new Vector3(spawn.x, spawn.y, spawn.z);
-            user.translationVector = user.position.substract(user.relPosition);
-            
-            break;
-        }
-    }
-
+    
     socket.on('updatePosition', (pos) => {
         console.log('updating position');
         handleUpdatePosition(user, pos);
     })
     
     // Set to only update every 50 seconds
-    var interval = setInterval(() => {
-        socket.emit('syncPosition', user.relPosList);
+    setInterval(function(){
+        if (user.relPosList !== undefined) {
+            socket.emit('syncPosition', user.relPosList);
+        }
     }, 50);
-    
 
     // Clean up when the user disconnect
     socket.on('disconnect', () => {
         console.log('disconnected');
         console.log(user);
-        spawnpoints[user.spawnPointIndex].occupied = false;
+        if (spawnpoints[user.spawnPointIndex] !== undefined) {
+            spawnpoints[user.spawnPointIndex].occupied = false;
+        }
         delete users[user.id];
         delete sockets[user.id];
-        clearInterval(interval);
+        // clearInterval(interval);
     })
 });
 
