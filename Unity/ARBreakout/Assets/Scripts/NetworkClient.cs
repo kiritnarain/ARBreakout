@@ -1,16 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SocketIO;
 
-public class NetworkClient : SocketIOComponent
+public class NetworkClient : MonoBehaviour //: SocketIOComponent
 {
     public GameObject PlayerModel;
     private Dictionary<string, GameObject> playerObjects;
     private string id = null;
      
     // Start is called before the first frame update
-    public override void Start()
+    /*public override void Start()
     {
         base.Start();
     }
@@ -78,5 +77,5 @@ public class NetworkClient : SocketIOComponent
     public string getID()
     {
         return this.id;
-    }
+    }*/
 }
