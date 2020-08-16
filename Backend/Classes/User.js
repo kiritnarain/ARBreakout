@@ -4,7 +4,7 @@ const Vector3 = require('./Vector3');
 class User {
 
     constructor() {
-        this.username = '';
+        this.username = '';           // Username (not unique)
         this.id = shortID.generate(); // Unique shortID
         this.position = new Vector3(); // Position stored in the server
         this.relPosition = new Vector3(); // Position relative to the user origin
