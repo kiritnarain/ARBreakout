@@ -8,7 +8,6 @@ var sockets = []; // Mapping from userID to the Socket
 var spawnpoints = [];  // Array of possible spawn points
 
 io.on('connection', (socket) => {
-    process.setMaxListeners(0)
     console.log('listening');
 
     var user = new User();
@@ -40,16 +39,15 @@ io.on('connection', (socket) => {
             }
         }
     })
-    user.relPosition = new Vector3(1, 1, 1);
 
-    
+    // Update the user position and updates the user relative position in all other users
     socket.on('updatePosition', (pos) => {
         console.log('updating position');
         handleUpdatePosition(user, pos);
     })
     
-    // Set to only update every 50 seconds
-    setInterval(() => {
+    // Send position list to users every 50 seconds
+    var interval = setInterval(() => {
         if (user.relPosList !== undefined) {
             socket.emit('syncPosition', user.relPosList);
         }
@@ -64,7 +62,7 @@ io.on('connection', (socket) => {
         }
         delete users[user.id];
         delete sockets[user.id];
-        // clearInterval(interval);
+        clearInterval(interval);
     })
 });
 
