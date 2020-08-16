@@ -67,6 +67,8 @@ io.on('connection', (socket) => {
 });
 
 // Update the other users positional data.
+// user : the user that position changes
+// pos : the position it changes to
 handleUpdatePosition = (user, pos) => {
     let newPosition = new Vector3(pos.relativeX, pos.relativeY, pos.relativeZ);
 
@@ -86,7 +88,8 @@ handleUpdatePosition = (user, pos) => {
             let difference = user.position.substract(users[userID].position);
 
             let found = false;
-            for (otherPos in relPosListOther) {
+            for (i in relPosListOther) {
+                let otherPos = relPosListOther[i];
                 if (otherPos.id === user.id) {
                     otherPos.x = difference.x;
                     otherPos.y = difference.y;
