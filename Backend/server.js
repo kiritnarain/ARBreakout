@@ -42,6 +42,14 @@ io.on('connection', (socket) => {
                 break;
             }
         }
+
+        // Send position list to users every 50 seconds
+        var interval = setInterval(() => {
+            if (user.othersRelativePos !== undefined) {
+                console.log('syncing position');
+                socket.emit('syncPosition', {users: user.othersRelativePos});
+            }
+        }, 50);
     });
 
     // Update the user position and updates the user relative position in all other users
@@ -50,13 +58,7 @@ io.on('connection', (socket) => {
         handleUpdatePosition(user, pos);
     });
     
-    // Send position list to users every 50 seconds
-    var interval = setInterval(() => {
-        if (user.relPosList !== undefined) {
-            console.log('syncing position');
-            socket.emit('syncPosition', user.relPosList);
-        }
-    }, 50);
+
 
     // Clean up when the user disconnect
     socket.on('disconnect', () => {
@@ -108,7 +110,7 @@ handleUpdatePosition = (user, pos) => {
             }
         }
     }
-}
+};
 
 // Generate 4n spawnpoints
 generateSpawnPoints = (n) => {

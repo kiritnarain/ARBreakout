@@ -16,6 +16,7 @@ public class NetworkClient : SocketIOComponent
     {
         base.Start();
         setupEvents();
+        StartCoroutine("UpdatePos");
     }
 
     // Update is called once per frame
@@ -23,6 +24,22 @@ public class NetworkClient : SocketIOComponent
     {
         base.Update();
         
+    }
+
+    //Send new player postiion to server
+    IEnumerator UpdatePos()
+    {
+        for (; ; )
+        {
+            JSONObject updateObj = new JSONObject(JSONObject.Type.OBJECT);
+            updateObj.AddField("id", id);
+            Vector3 relPos = Player.transform.position - Origin.transform.position;
+            updateObj.AddField("relativeX", relPos.x);
+            updateObj.AddField("relativeY", relPos.y);
+            updateObj.AddField("relativeZ", relPos.z);
+            Emit("updatePosition", updateObj);
+            yield return new WaitForSeconds(5f); //1/10 second interval updates
+        }
     }
 
     private void setupEvents()
