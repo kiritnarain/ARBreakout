@@ -1,6 +1,5 @@
 # ARBreakout
-AR Breakout Rooms for Hack'20 Hackathon
-
+AR Breakout Rooms for Hack'20 Hackathon. AR Breakout Rooms aims to make remote working with small groups feel more physically present. AR Breakout Rooms uses ARCore and ARKit to bring the avatars of your friends, family and co-workers right in the same space, and enables face-to-face talking and sharing 3D content.
 
 API Spec:
 - Initialization: server to client
